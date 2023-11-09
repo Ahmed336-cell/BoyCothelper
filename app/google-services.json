@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "949986712518",
+    "firebase_url": "https://products-7e524-default-rtdb.firebaseio.com",
+    "project_id": "products-7e524",
+    "storage_bucket": "products-7e524.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949986712518:android:cf48c30fee8f6f376ab0c7",
+        "android_client_info": {
+          "package_name": "com.elm.boycothelper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJ6IiUX_cmH3sYPn8NGetWU7l_-6Yvs3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

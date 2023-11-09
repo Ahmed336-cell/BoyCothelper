@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="scan_qr_amp_barcode_of_product"><![CDATA[افحص المنتج الخاص بك]]></string>
+    <string name="product_checker">افحص المنتج</string>
+    <string name="Products_Can_Buy">منتجات يمكنك شراءها</string>
+    <string name="camera">الكاميرا</string>
+    <string name="scan">افحص</string>
+    <string name="gallery">المعرض</string>
+    <string name="boycott">مقاطعة:</string>
+    <string name="organization_name">اسم الشركة : </string>
+    <string name="product_name">اسم المنتج : </string>
+    <string name="result">النتائج : </string>
+    <string name="buy">يمكنك شراء هذا المنتج</string>
+    <string name="dont_buy">لا تشتري هذا المنتج</string>
+    <string name="search">بحث....</string>
+
+</resources>
