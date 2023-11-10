@@ -14,5 +14,14 @@
     <string name="buy">يمكنك شراء هذا المنتج</string>
     <string name="dont_buy">لا تشتري هذا المنتج</string>
     <string name="search">بحث....</string>
+    <string name="check_connection">تأكد من اتصالك بالانترنت</string>
+    <string name="nodata">لا يوجد بيانات للعرض</string>
+
+    <string name="storageper">"مطلوب إذن التخزين</string>
+    <string name="cameraper">مطلوب إذن الكاميرا والتخزين</string>
+    <string name="cancelled">تم الالغاء</string>
+    <string name="faildscann">فشل الفحص </string>
+    <string name="pickImage">اختر الصورة اولا</string>
+    <string name="correctbar">اختر صورة تحتوي على باركود</string>
 
 </resources>

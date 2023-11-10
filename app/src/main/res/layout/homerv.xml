@@ -27,8 +27,8 @@
                 android:id="@+id/catPhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="130dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/productchecker"
+                android:scaleType="centerCrop"
+                android:src="@drawable/qrcode"
                 android:layout_marginEnd="8dp"
 
                 android:layout_marginBottom="10dp"/>

@@ -65,7 +65,7 @@ public class CategoriesFragment extends Fragment {
                     Log.d(TAG, String.valueOf(categoryModelList.size()));
 
                 }else {
-                    Toast.makeText(getContext(), "Failed to fetch data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
                     Log.d(TAG,"Faild");
 
                 }
@@ -74,7 +74,7 @@ public class CategoriesFragment extends Fragment {
             @Override
             public void onFailure(Call<List<CategoryModel>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
                 Log.d(TAG,t.getMessage());
             }
         });

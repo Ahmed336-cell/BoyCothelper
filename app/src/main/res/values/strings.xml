@@ -14,4 +14,12 @@
     <string name="dont_buy">DON\'T BUY IT</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="search">Search...</string>
+    <string name="check_connection">Check Internet Connection</string>
+    <string name="nodata">"No Data Founded"</string>
+    <string name="storageper">storage permission is required</string>
+    <string name="cameraper">camera and storage permission is required</string>
+    <string name="cancelled">Cancelled</string>
+<string name="faildscann">Failed To Scanning </string>
+    <string name="pickImage">Pick Image First ..</string>
+    <string name="correctbar">Choose image with Barcode or Qr code</string>
 </resources>

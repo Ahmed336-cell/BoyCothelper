@@ -31,9 +31,9 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         homeRvAdapter = new HomeRvAdapter(this,itemList);
         recyclerView.setAdapter(homeRvAdapter);
-        homeModel = new HomeModel(getString(R.string.product_checker),R.drawable.checll);
+        homeModel = new HomeModel(getString(R.string.product_checker),R.drawable.qrcode);
         itemList.add(homeModel);
-        itemList.add( new HomeModel(getString(R.string.Products_Can_Buy),R.drawable.fi));
+        itemList.add( new HomeModel(getString(R.string.Products_Can_Buy),R.drawable.cart));
         homeRvAdapter.notifyItemInserted(itemList.size() - 1);
     }
 

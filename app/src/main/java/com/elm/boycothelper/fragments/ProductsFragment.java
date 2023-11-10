@@ -76,7 +76,7 @@ public class ProductsFragment extends Fragment {
             }
         }
         if (filterdList.isEmpty()){
-            Toast.makeText(getContext(), "No Data Founded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.nodata), Toast.LENGTH_SHORT).show();
         }else{
             productsAdapter.setFilterd(filterdList);
         }
@@ -110,7 +110,7 @@ public class ProductsFragment extends Fragment {
                         recyclerView.setAdapter(productsAdapter);
                     }
                 }else {
-                    Toast.makeText(getContext(), "Failed to fetch data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
                     Log.d(TAG,"Faild");
                 }
 
@@ -120,7 +120,7 @@ public class ProductsFragment extends Fragment {
             @Override
             public void onFailure(Call<List<ProductModel>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
                 Log.d(TAG,t.getMessage());
 
             }
