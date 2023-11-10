@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">قاطِع|Qat3</string>
-    <string name="scan_qr_amp_barcode_of_product"><![CDATA[Scan QR & Barcode of product]]></string>
+    <string name="scan_qr_amp_barcode_of_product"><![CDATA[Scan Barcode of product]]></string>
     <string name="product_checker">Product Checker</string>
     <string name="Products_Can_Buy">Products Can Buy</string>
     <string name="scan">Scan</string>

@@ -1,52 +1,47 @@
 package com.elm.boycothelper.fragments;
 
 import android.os.Bundle;
-
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.elm.boycothelper.MVVMmodel.ProductsViewModel;
 import com.elm.boycothelper.R;
-import com.elm.boycothelper.adapter.CategoryAdapter;
 import com.elm.boycothelper.adapter.ProductsAdapter;
-import com.elm.boycothelper.model.CategoryModel;
 import com.elm.boycothelper.model.ProductModel;
-import com.elm.boycothelper.retrofit.CategoryService;
 import com.elm.boycothelper.retrofit.ProductsService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 public class ProductsFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    ProductsAdapter productsAdapter;
-    ProgressBar progressBar;
-    private static final String TAG = "MAIN_TAG";
-    SearchView searchView;
+    private ProductsViewModel productsViewModel;
+    private RecyclerView recyclerView;
+    private ProductsAdapter productsAdapter;
+    private ProgressBar progressBar;
+    private SearchView searchView;
 
-    List<ProductModel> filteredProducts = new ArrayList<>();
+    private List<ProductModel> filteredProducts = new ArrayList<>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_products, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_products, container, false);
+
         recyclerView = view.findViewById(R.id.productsRv);
         progressBar = view.findViewById(R.id.progressBar);
         searchView = view.findViewById(R.id.searchView);
@@ -63,68 +58,72 @@ public class ProductsFragment extends Fragment {
                 return true;
             }
         });
+
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        fetchDataApi();
+
+        // Initialize ViewModel
+        productsViewModel = new ViewModelProvider(this).get(ProductsViewModel.class);
+
         return view;
     }
 
-    private void filterList(String newText) {
-        List<ProductModel>filterdList= new ArrayList<>();
-        for (ProductModel item :filteredProducts){
-            if (item.getName().toLowerCase().contains(newText.toLowerCase())){
-                filterdList.add(item);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        observeViewModel();
+    }
+
+    private void observeViewModel() {
+        productsViewModel.getProductsList().observe(getViewLifecycleOwner(), this::updateProductsList);
+        productsViewModel.getIsLoading().observe(getViewLifecycleOwner(), this::updateLoadingState);
+
+        // Fetch data when the fragment view is created
+        productsViewModel.fetchProducts(createProductsService());
+    }
+
+    private void updateProductsList(List<ProductModel> productsList) {
+        if (productsList != null) {
+            filteredProducts.clear();
+            String ca = "";
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                ca = bundle.getString("cate", "");
             }
-        }
-        if (filterdList.isEmpty()){
-            Toast.makeText(getContext(), getString(R.string.nodata), Toast.LENGTH_SHORT).show();
-        }else{
-            productsAdapter.setFilterd(filterdList);
+            for (ProductModel product : productsList) {
+                if (ca.equals(product.getDescription())) {
+                    filteredProducts.add(product);
+                }
+            }
+            productsAdapter = new ProductsAdapter(getContext(), filteredProducts);
+            recyclerView.setAdapter(productsAdapter);
+        } else {
+            // Handle null or empty list
         }
     }
 
-    private void fetchDataApi() {
-        progressBar.setVisibility(View.VISIBLE); // Show ProgressBar
-        Retrofit retrofit = new Retrofit.Builder()
+    private void updateLoadingState(Boolean isLoading) {
+        progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+    }
+
+    private void filterList(String newText) {
+        List<ProductModel> filteredList = new ArrayList<>();
+        for (ProductModel item : filteredProducts) {
+            if (item.getName().toLowerCase().contains(newText.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+        if (filteredList.isEmpty()) {
+            Toast.makeText(getContext(), getString(R.string.nodata), Toast.LENGTH_SHORT).show();
+        } else {
+            productsAdapter.setFilterd(filteredList);
+        }
+    }
+
+    private ProductsService createProductsService() {
+        return new Retrofit.Builder()
                 .baseUrl("http://productsupport.somee.com/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ProductsService productsService = retrofit.create(ProductsService.class);
-        Call<List<ProductModel>> call = productsService.getProducts();
-        call.enqueue(new Callback<List<ProductModel>>() {
-            @Override
-            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
-                progressBar.setVisibility(View.GONE); // Hide ProgressBar
-                if (response.isSuccessful()) {
-                    List<ProductModel> productModelList = response.body();
-
-                    String ca = "";
-                    Bundle bundle = getArguments();
-                    if (bundle != null) {
-                        ca = bundle.getString("cate", "");
-                    }
-                    for (ProductModel product : productModelList) {
-                        if (ca.equals(product.getDescription())) {
-                            filteredProducts.add(product);
-                        }
-                        productsAdapter = new ProductsAdapter(getContext(), filteredProducts);
-                        recyclerView.setAdapter(productsAdapter);
-                    }
-                }else {
-                    Toast.makeText(getContext(), getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
-                    Log.d(TAG,"Faild");
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<List<ProductModel>> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
-                Log.d(TAG,t.getMessage());
-
-            }
-        });
+                .build()
+                .create(ProductsService.class);
     }
-
 }

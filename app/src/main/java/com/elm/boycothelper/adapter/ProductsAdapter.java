@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,7 +43,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         ProductModel productModel = productModelsList.get(position);
         holder.name.setText(productModel.getName());
         holder.description.setText(productModel.getDescription());
-        Picasso.get().load(productModel.getImageUrl()).into(holder.imageView);
+        Picasso.get().load(productModel.getImageUrl()).placeholder(R.drawable.loading100).into(holder.imageView);
 
     }
 
@@ -53,7 +54,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView name,description;
-        TouchImageView imageView;
+        ImageView imageView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nameProduct);

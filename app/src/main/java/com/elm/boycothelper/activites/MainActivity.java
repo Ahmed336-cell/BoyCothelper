@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
@@ -454,10 +455,39 @@ public class MainActivity extends AppCompatActivity {
         TextView productNameTextView = dialogView.findViewById(R.id.productname);
         TextView organizationNameTextView = dialogView.findViewById(R.id.organizationname);
         TextView boycottTextView = dialogView.findViewById(R.id.boycott);
+        TextView nameLabel = dialogView.findViewById(R.id.productlabel);
+        TextView organLabel = dialogView.findViewById(R.id.organLabel);
 
         // Set data to views
-        productNameTextView.setText(name);
-        organizationNameTextView.setText(coun);
+        if (!name.isEmpty()&& !coun.isEmpty()){
+            productNameTextView.setText(name);
+            organizationNameTextView.setText(coun);
+            nameLabel.setVisibility(View.VISIBLE);
+            productNameTextView.setVisibility(View.VISIBLE);
+            organizationNameTextView.setVisibility(View.VISIBLE);
+            organLabel.setVisibility(View.VISIBLE);
+
+
+        }else if (name.isEmpty() && !coun.isEmpty()){
+            organizationNameTextView.setText(coun);
+            nameLabel.setVisibility(View.GONE);
+            productNameTextView.setVisibility(View.GONE);
+            organizationNameTextView.setVisibility(View.VISIBLE);
+            organLabel.setVisibility(View.VISIBLE);
+
+        }else if (coun.isEmpty() &&!name.isEmpty()){
+            productNameTextView.setText(name);
+            nameLabel.setVisibility(View.VISIBLE);
+            productNameTextView.setVisibility(View.VISIBLE);
+            organizationNameTextView.setVisibility(View.GONE);
+            organLabel.setVisibility(View.GONE);
+        }else {  nameLabel.setVisibility(View.GONE);
+            productNameTextView.setVisibility(View.GONE);
+            organizationNameTextView.setVisibility(View.GONE);
+            organLabel.setVisibility(View.GONE);
+
+        }
+
 
         if (isBoycott) {
             boycottTextView.setText(getString(R.string.dont_buy));

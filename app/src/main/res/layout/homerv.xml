@@ -1,20 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardElevation="5dp"
-        app:cardCornerRadius="20dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardMaxElevation="6dp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="5dp"
+    app:cardCornerRadius="20dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardMaxElevation="6dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <!-- Horizontal LinearLayout to hold the image and text -->
         <LinearLayout
@@ -25,12 +19,11 @@
 
             <ImageView
                 android:id="@+id/catPhoto"
-                android:layout_width="wrap_content"
+                android:layout_width="330dp"
                 android:layout_height="130dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/qrcode"
-                android:layout_marginEnd="8dp"
-
+                android:layout_gravity="center"
                 android:layout_marginBottom="10dp"/>
 
             <TextView
@@ -44,4 +37,3 @@
                 android:textColor="@color/black"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-</RelativeLayout>
