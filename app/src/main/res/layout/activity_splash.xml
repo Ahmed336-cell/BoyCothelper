@@ -22,7 +22,7 @@
 
     <ImageView
         android:id="@+id/splashImage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="0dp"
         android:src="@drawable/palestinemap"

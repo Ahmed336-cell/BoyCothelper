@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +42,9 @@ public class CategoriesFragment extends Fragment {
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
 
+        // Make the API call in onCreate
+        categoryViewModel.fetchData(createCategoryService());
+
         return view;
     }
 
@@ -56,9 +58,6 @@ public class CategoriesFragment extends Fragment {
     private void observeViewModel() {
         categoryViewModel.getCategoryList().observe(getViewLifecycleOwner(), this::updateCategoryList);
         categoryViewModel.getIsLoading().observe(getViewLifecycleOwner(), this::updateLoadingState);
-
-        // Initiate data fetch when the fragment is created
-        categoryViewModel.fetchData(createCategoryService());
     }
 
     private void updateCategoryList(List<CategoryModel> categoryList) {
@@ -71,7 +70,9 @@ public class CategoriesFragment extends Fragment {
     }
 
     private void updateLoadingState(Boolean isLoading) {
-        progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        if (isLoading != null) {
+            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        }
     }
 
     private CategoryService createCategoryService() {

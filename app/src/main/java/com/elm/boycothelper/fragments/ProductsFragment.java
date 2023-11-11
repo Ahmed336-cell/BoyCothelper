@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -64,6 +63,9 @@ public class ProductsFragment extends Fragment {
         // Initialize ViewModel
         productsViewModel = new ViewModelProvider(this).get(ProductsViewModel.class);
 
+        // Make the API call in onCreate
+        productsViewModel.fetchProducts(createProductsService());
+
         return view;
     }
 
@@ -76,9 +78,6 @@ public class ProductsFragment extends Fragment {
     private void observeViewModel() {
         productsViewModel.getProductsList().observe(getViewLifecycleOwner(), this::updateProductsList);
         productsViewModel.getIsLoading().observe(getViewLifecycleOwner(), this::updateLoadingState);
-
-        // Fetch data when the fragment view is created
-        productsViewModel.fetchProducts(createProductsService());
     }
 
     private void updateProductsList(List<ProductModel> productsList) {

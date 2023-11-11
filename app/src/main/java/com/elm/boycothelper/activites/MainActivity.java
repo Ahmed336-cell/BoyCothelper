@@ -265,10 +265,10 @@ public class MainActivity extends AppCompatActivity {
 
                         } else {
                             // Handle the case where no data is found
-                            callSecondAPI(upcCode);
+                           // callSecondAPI(upcCode);
                         }
                     } else {
-                        callSecondAPI(upcCode);
+                       // callSecondAPI(upcCode);
                     }
                 }
 
@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
         TextView organLabel = dialogView.findViewById(R.id.organLabel);
 
         // Set data to views
-        if (!name.isEmpty()&& !coun.isEmpty()){
+        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(coun)) {
             productNameTextView.setText(name);
             organizationNameTextView.setText(coun);
             nameLabel.setVisibility(View.VISIBLE);
@@ -467,27 +467,26 @@ public class MainActivity extends AppCompatActivity {
             organizationNameTextView.setVisibility(View.VISIBLE);
             organLabel.setVisibility(View.VISIBLE);
 
-
-        }else if (name.isEmpty() && !coun.isEmpty()){
+        } else if (TextUtils.isEmpty(name) && !TextUtils.isEmpty(coun)) {
             organizationNameTextView.setText(coun);
             nameLabel.setVisibility(View.GONE);
             productNameTextView.setVisibility(View.GONE);
             organizationNameTextView.setVisibility(View.VISIBLE);
             organLabel.setVisibility(View.VISIBLE);
 
-        }else if (coun.isEmpty() &&!name.isEmpty()){
-            productNameTextView.setText(name);
+        } else if (!TextUtils.isEmpty(name) && TextUtils.isEmpty(coun)) {
             nameLabel.setVisibility(View.VISIBLE);
             productNameTextView.setVisibility(View.VISIBLE);
             organizationNameTextView.setVisibility(View.GONE);
             organLabel.setVisibility(View.GONE);
-        }else {  nameLabel.setVisibility(View.GONE);
+            productNameTextView.setText(name);
+
+        } else {
+            nameLabel.setVisibility(View.GONE);
             productNameTextView.setVisibility(View.GONE);
             organizationNameTextView.setVisibility(View.GONE);
             organLabel.setVisibility(View.GONE);
-
         }
-
 
         if (isBoycott) {
             boycottTextView.setText(getString(R.string.dont_buy));
