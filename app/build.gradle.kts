@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+
 }
 
 android {
@@ -55,6 +57,8 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     implementation ("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
     implementation ("androidx.lifecycle:lifecycle-livedata:2.3.1")
+    implementation("com.google.firebase:firebase-crashlytics")
+
 
 
 
