@@ -22,6 +22,8 @@ public class ProductModel {
         this.categoryID = categoryID;
     }
 
+
+
     public String getName() {
         return name;
     }

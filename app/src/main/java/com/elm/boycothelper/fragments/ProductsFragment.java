@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.elm.boycothelper.MVVMmodel.ProductsViewModel;
 import com.elm.boycothelper.R;
@@ -58,7 +59,9 @@ public class ProductsFragment extends Fragment {
             }
         });
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+
+        recyclerView.setLayoutManager(layoutManager);
 
         // Initialize ViewModel
         productsViewModel = new ViewModelProvider(this).get(ProductsViewModel.class);

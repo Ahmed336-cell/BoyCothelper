@@ -21,7 +21,7 @@ public class CategoryViewModel extends ViewModel {
 
     private MutableLiveData<List<CategoryModel>> categoryList = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-
+    private boolean isDataLoaded = false; // Added boolean flag
 
     public LiveData<List<CategoryModel>> getCategoryList() {
         return categoryList;
@@ -32,21 +32,24 @@ public class CategoryViewModel extends ViewModel {
     }
 
     public void fetchData(CategoryService categoryService) {
-        isLoading.setValue(true);
-        categoryService.getCategories().enqueue(new Callback<List<CategoryModel>>() {
-            @Override
-            public void onResponse(Call<List<CategoryModel>> call, Response<List<CategoryModel>> response) {
-                isLoading.setValue(false);
-                if (response.isSuccessful()) {
-                    categoryList.setValue(response.body());
+        if (!isDataLoaded) { // Check if data is not already loaded
+            isLoading.setValue(true);
+            categoryService.getCategories().enqueue(new Callback<List<CategoryModel>>() {
+                @Override
+                public void onResponse(Call<List<CategoryModel>> call, Response<List<CategoryModel>> response) {
+                    isLoading.setValue(false);
+                    if (response.isSuccessful()) {
+                        categoryList.setValue(response.body());
+                        isDataLoaded = true; // Set the flag to true after data is loaded
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<CategoryModel>> call, Throwable t) {
-                isLoading.setValue(false);
-                // Handle failure
-            }
-        });
+                @Override
+                public void onFailure(Call<List<CategoryModel>> call, Throwable t) {
+                    isLoading.setValue(false);
+                    // Handle failure
+                }
+            });
+        }
     }
 }

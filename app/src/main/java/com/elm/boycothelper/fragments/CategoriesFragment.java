@@ -1,6 +1,7 @@
 package com.elm.boycothelper.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class CategoriesFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.categoryRV);
         progressBar = view.findViewById(R.id.progressBarCat);
+
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
@@ -53,6 +55,7 @@ public class CategoriesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         observeViewModel();
+
     }
 
     private void observeViewModel() {

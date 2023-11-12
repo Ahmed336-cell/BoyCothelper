@@ -18,6 +18,7 @@ public class ProductsViewModel extends ViewModel {
 
     private final MutableLiveData<List<ProductModel>> productsList = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private boolean isDataLoaded = false; // Added boolean flag
 
     public LiveData<List<ProductModel>> getProductsList() {
         return productsList;
@@ -28,26 +29,29 @@ public class ProductsViewModel extends ViewModel {
     }
 
     public void fetchProducts(ProductsService productsService) {
-        isLoading.setValue(true);
+        if (!isDataLoaded) { // Check if data is not already loaded
+            isLoading.setValue(true);
 
-        Call<List<ProductModel>> call = productsService.getProducts();
-        call.enqueue(new Callback<List<ProductModel>>() {
-            @Override
-            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
-                isLoading.setValue(false);
-                if (response.isSuccessful()) {
-                    List<ProductModel> productModelList = response.body();
-                    productsList.setValue(productModelList);
-                } else {
-                    // Handle error
+            Call<List<ProductModel>> call = productsService.getProducts();
+            call.enqueue(new Callback<List<ProductModel>>() {
+                @Override
+                public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                    isLoading.setValue(false);
+                    if (response.isSuccessful()) {
+                        List<ProductModel> productModelList = response.body();
+                        productsList.setValue(productModelList);
+                        isDataLoaded = true; // Set the flag to true after data is loaded
+                    } else {
+                        // Handle error
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<ProductModel>> call, Throwable t) {
-                isLoading.setValue(false);
-                // Handle failure
-            }
-        });
+                @Override
+                public void onFailure(Call<List<ProductModel>> call, Throwable t) {
+                    isLoading.setValue(false);
+                    // Handle failure
+                }
+            });
+        }
     }
 }
