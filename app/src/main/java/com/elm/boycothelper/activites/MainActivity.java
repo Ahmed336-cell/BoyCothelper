@@ -233,10 +233,10 @@ public class MainActivity extends AppCompatActivity {
             String upcCode = barcode.getRawValue();
             Log.d(TAG, "exractBarCodeInfo: rawValue " + upcCode);
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.upcdatabase.org/")
+                    .baseUrl(Constants.UPC_API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            String apiKay = "EB82E172C73F00431D2B7C3FB01C8858";
+            String apiKay = Constants.API_KEY_UPC;
             UPCService1 UPCService1 = retrofit.create(UPCService1.class);
             Call<ProductsJson1> call = UPCService1.getProductData(upcCode, apiKay);
             call.enqueue(new Callback<ProductsJson1>() {

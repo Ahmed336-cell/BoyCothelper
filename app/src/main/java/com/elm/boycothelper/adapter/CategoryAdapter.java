@@ -19,6 +19,7 @@ import com.elm.boycothelper.fragments.CategoriesFragment;
 import com.elm.boycothelper.fragments.ProductsFragment;
 import com.elm.boycothelper.model.CategoryModel;
 import com.elm.boycothelper.model.HomeModel;
+import com.elm.boycothelper.pojo.Constants;
 
 import java.util.List;
 
@@ -78,14 +79,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 ProductsFragment productsFragment = new ProductsFragment();
                 Bundle b = new Bundle();
                 if (categoryModel.getName().equals("Chips") ){
-                    b.putString("cate",categoryModel.getName()+" ");
+                    b.putString(Constants.CATEGORY_KEY,categoryModel.getName()+" ");
                 }else if (categoryModel.getName().equals("Personal hygiene")){
-                    b.putString("cate","Personal hygiene (shampoo,deodorant..)");
+                    b.putString(Constants.CATEGORY_KEY,"Personal hygiene (shampoo,deodorant..)");
 
                 }
 
                 else{
-                    b.putString("cate",categoryModel.getName());
+                    b.putString(Constants.CATEGORY_KEY,categoryModel.getName());
                 }
                 productsFragment.setArguments(b);
                 AppCompatActivity appCompatActivity =(AppCompatActivity)v.getContext();

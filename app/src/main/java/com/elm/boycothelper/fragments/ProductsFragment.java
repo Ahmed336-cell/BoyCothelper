@@ -20,6 +20,7 @@ import com.elm.boycothelper.MVVMmodel.ProductsViewModel;
 import com.elm.boycothelper.R;
 import com.elm.boycothelper.adapter.ProductsAdapter;
 import com.elm.boycothelper.model.ProductModel;
+import com.elm.boycothelper.pojo.Constants;
 import com.elm.boycothelper.retrofit.ProductsService;
 
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class ProductsFragment extends Fragment {
             String ca = "";
             Bundle bundle = getArguments();
             if (bundle != null) {
-                ca = bundle.getString("cate", "");
+                ca = bundle.getString(Constants.CATEGORY_KEY, "");
             }
             for (ProductModel product : productsList) {
                 if (ca.equals(product.getDescription())) {
@@ -123,7 +124,7 @@ public class ProductsFragment extends Fragment {
 
     private ProductsService createProductsService() {
         return new Retrofit.Builder()
-                .baseUrl("http://productsupport.somee.com/")
+                .baseUrl(Constants.PRODUCT_API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(ProductsService.class);
