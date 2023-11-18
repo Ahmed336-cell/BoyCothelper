@@ -22,4 +22,7 @@
 <string name="faildscann">Failed To Scanning </string>
     <string name="pickImage">Pick Image First ..</string>
     <string name="correctbar">Choose image with Barcode or Qr code</string>
+    <string name="permession">this app need permission to get full and better experience with app and to check product code</string>
+    <string name="permissionrequest">Permission Request</string>
+    <string name="undifind">Undefined</string>
 </resources>

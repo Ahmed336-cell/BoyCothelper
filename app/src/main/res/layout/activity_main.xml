@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/imageapp"
         android:scaleType="center"
-        android:layout_marginTop="32dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -66,11 +65,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/camerabtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -80,15 +79,7 @@
                 android:layout_marginEnd="8dp"
                 />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/gallerybtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/gallery"
-                android:backgroundTint="@color/black"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                />
+
         </LinearLayout>
         <ImageView
             android:layout_width="match_parent"

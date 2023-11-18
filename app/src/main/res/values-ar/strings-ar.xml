@@ -23,5 +23,8 @@
     <string name="faildscann">فشل الفحص </string>
     <string name="pickImage">اختر الصورة اولا</string>
     <string name="correctbar">اختر صورة تحتوي على باركود</string>
+    <string name="permession">هذا التطبيق يحتاج لأذن الوصول لكي تحقق تجربة افضل كامله للتطبيق وهي عن طريق قراءة باركود المنتج</string>
+    <string name="permissionrequest">طلب إذن وصول</string>
+    <string name="undifind">غير معروف</string>
 
 </resources>

@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -59,6 +60,7 @@ import com.google.mlkit.vision.common.InputImage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -89,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         camera = findViewById(R.id.camerabtn);
-        gallery = findViewById(R.id.gallerybtn);
         scan = findViewById(R.id.scanbtn);
         barcodeImg = findViewById(R.id.imageVU);
         progressBar = findViewById(R.id.progressBarbarcode);
@@ -145,26 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
-                    if (checkStoragePermession()) {
-                        pickImage();
-                    } else {
-                        requestStoragePermession();
-                    }
-                }
 
-                else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    if (Environment.isExternalStorageManager()) {
-                        pickImage();
-                    } else {
-                        requestStoragePermissionForAndroid11Plus();
-                    }
-                }
-            }
-        });
 
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,23 +234,32 @@ public class MainActivity extends AppCompatActivity {
 
 
                             boolean isBoycott = false;
-                            for (int i = 0; i < companies.size(); i++) {
-                                if (coun != null && coun.toLowerCase().contains(companies.get(i).toLowerCase()) ||
-                                        name != null && name.toLowerCase().contains(companies.get(i).toLowerCase()) ||
-                                        description != null && description.toLowerCase().contains(companies.get(i).toLowerCase())) {
-                                    isBoycott = true;
-                                    break;
+                            if (coun ==null && description == null && name == null){
+                                showBarcodeDataDialog(getString(R.string.undifind),getString(R.string.undifind),true);
+                            }else {
+                                for (int i = 0; i < companies.size(); i++) {
+                                    if (coun.toLowerCase().contains(companies.get(i).toLowerCase()) ||
+                                            name.toLowerCase().contains(companies.get(i).toLowerCase()) ||
+                                            description.toLowerCase().contains(companies.get(i).toLowerCase())) {
+                                        isBoycott = true;
+                                        break;
+                                    }
                                 }
+                                showBarcodeDataDialog(name,coun,isBoycott);
+
                             }
-                            showBarcodeDataDialog(name,coun,isBoycott);
 
 
                         } else {
                             // Handle the case where no data is found
                            // callSecondAPI(upcCode);
+                            displayNoDataFoundMessage();
+
                         }
                     } else {
                        // callSecondAPI(upcCode);
+                        displayNoDataFoundMessage();
+
                     }
                 }
 
@@ -331,22 +322,20 @@ public class MainActivity extends AppCompatActivity {
             }
     );
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private boolean checkStoragePermession(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        } else {
-            return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        }
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+
     }
-    private void requestStoragePermession(){
+    private void requestStoragePermession() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Handle storage permission for Android 11+
-            requestStoragePermissionForAndroid11Plus();
+            showPermissionDialog("Storage", STORAGE_REQUEST_CODE);
         } else {
             // Request storage permission for Android 10 and below
             ActivityCompat.requestPermissions(this, storagePermession, STORAGE_REQUEST_CODE);
-        }    }
-
+        }
+    }
     private boolean checkCameraPermession(){
         boolean result = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED;
@@ -354,10 +343,15 @@ public class MainActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED;
         return result && resultcamera;
     }
-    private void requestCameraPermession(){
-        ActivityCompat.requestPermissions(this,cameraPermession,CAMERA_REQUEST_CODE);
+    private void requestCameraPermession() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Handle storage permission for Android 11+
+            ActivityCompat.requestPermissions(MainActivity.this, cameraPermession, CAMERA_REQUEST_CODE);
+        } else {
+            // Request storage permission for Android 10 and below
+            ActivityCompat.requestPermissions(this, cameraPermession, CAMERA_REQUEST_CODE);
+        }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -367,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
                     boolean cameraAccepted= grantResults[0]==PackageManager.PERMISSION_GRANTED;
                     boolean storageAccepted= grantResults[1]==PackageManager.PERMISSION_GRANTED;
 
-                    if(cameraAccepted){
+                    if(cameraAccepted ){
 
                         pickIMageCamera();
                     }else {
@@ -488,10 +482,15 @@ public class MainActivity extends AppCompatActivity {
             organLabel.setVisibility(View.GONE);
         }
 
-        if (isBoycott) {
+        if (isBoycott && !Objects.equals(coun, getString(R.string.undifind))) {
             boycottTextView.setText(getString(R.string.dont_buy));
             boycottTextView.setTextColor(Color.parseColor("#FF0000"));
-        } else {
+        } else if (isBoycott && Objects.equals(coun,getString(R.string.undifind))) {
+            boycottTextView.setText(getString(R.string.undifind));
+            boycottTextView.setTextColor(Color.parseColor("#000000"));
+        }
+
+        else {
             boycottTextView.setText(getString(R.string.buy));
             boycottTextView.setTextColor(Color.parseColor("#008000"));
         }
@@ -510,6 +509,37 @@ public class MainActivity extends AppCompatActivity {
         // Show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+    private void showPermissionDialog(String permissionName, int requestCode) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.permissionrequest));
+        builder.setMessage(getString(R.string.permession));
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Request the permission
+                if (requestCode == CAMERA_REQUEST_CODE) {
+                    ActivityCompat.requestPermissions(MainActivity.this, cameraPermession, CAMERA_REQUEST_CODE);
+                } else if (requestCode == STORAGE_REQUEST_CODE) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        // Request storage permission for Android 10 and above
+                        ActivityCompat.requestPermissions(MainActivity.this, storagePermession, STORAGE_REQUEST_CODE);
+                    } else {
+                        // For versions below Android 10, proceed with the existing logic
+                        ActivityCompat.requestPermissions(MainActivity.this, storagePermession, STORAGE_REQUEST_CODE);
+                    }
+                }
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User declined the permission, handle accordingly
+                Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
 }
