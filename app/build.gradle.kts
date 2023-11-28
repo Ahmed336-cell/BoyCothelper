@@ -13,8 +13,8 @@ android {
         applicationId = "com.elm.boycothelper"
         minSdk = 24
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,6 +40,7 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation("androidx.preference:preference:1.2.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -72,6 +73,11 @@ dependencies {
     implementation("androidx.camera:camera-view:${camerax_version}")
     // If you want to additionally add CameraX ML Kit Vision Integration
     implementation("androidx.camera:camera-mlkit-vision:${camerax_version}")
+
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+
+
+
 
 
 

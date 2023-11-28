@@ -26,5 +26,11 @@
     <string name="permession">هذا التطبيق يحتاج لأذن الوصول لكي تحقق تجربة افضل كامله للتطبيق وهي عن طريق قراءة باركود المنتج</string>
     <string name="permissionrequest">طلب إذن وصول</string>
     <string name="undifind">غير معروف</string>
+    <string name="tryscan">فحص منتج اخر</string>
+    <string name="finish">إنهاء</string>
+<string name="scanningcode">فحص الباركود</string>
+    <string name="nofounded">الغاء</string>
+    <string name="select_language">اختار اللغة</string>
+    <string name="apply_changes">طبق التعديلات</string>
 
 </resources>

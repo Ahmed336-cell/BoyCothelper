@@ -45,29 +45,29 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CategoryModel categoryModel = categoryModelList.get(position);
         holder.name.setText(categoryModel.getName());
-        if (categoryModel.getName().equals("Cheese")){
+        if (categoryModel.getName().equals("جبنة")){
             holder.imageView.setImageResource(R.drawable.cheese);
-        } else if (categoryModel.getName().equals("Chips")) {
+        } else if (categoryModel.getName().equals("شيبس")) {
             holder.imageView.setImageResource(R.drawable.chips);
-        }else if (categoryModel.getName().equals("Chocolate")) {
+        }else if (categoryModel.getName().equals("شوكولاتة")) {
             holder.imageView.setImageResource(R.drawable.chocolate);
-        }else if (categoryModel.getName().equals("Cafe")) {
+        }else if (categoryModel.getName().equals("قهوة")) {
             holder.imageView.setImageResource(R.drawable.coffee);
-        }else if (categoryModel.getName().equals("Cosmetic")) {
+        }else if (categoryModel.getName().equals("مستحضرات تجميل")) {
             holder.imageView.setImageResource(R.drawable.cosmetics);
-        }else if (categoryModel.getName().equals("Detergent")) {
+        }else if (categoryModel.getName().equals("منظفات")) {
             holder.imageView.setImageResource(R.drawable.detergent);
-        }else if (categoryModel.getName().equals("Kitchen")) {
+        }else if (categoryModel.getName().equals("مستلزمات مطبخ")) {
             holder.imageView.setImageResource(R.drawable.grocerycart);
-        }else if (categoryModel.getName().equals("Milk")) {
+        }else if (categoryModel.getName().equals("لبن")) {
             holder.imageView.setImageResource(R.drawable.milk);
-        }else if (categoryModel.getName().equals("Water")) {
+        }else if (categoryModel.getName().equals("مياة")) {
             holder.imageView.setImageResource(R.drawable.waterbottle);
-        }else if (categoryModel.getName().equals("Personal hygiene")) {
+        }else if (categoryModel.getName().equals("النظافة الشخصية")) {
             holder.imageView.setImageResource(R.drawable.amenities);
-        }else if (categoryModel.getName().equals("Cola")) {
+        }else if (categoryModel.getName().equals("كولا")) {
             holder.imageView.setImageResource(R.drawable.softdrink);
-        }else if (categoryModel.getName().equals("Tomato Paste")) {
+        }else if (categoryModel.getName().equals("صلصة طماطم")) {
             holder.imageView.setImageResource(R.drawable.ketchup);
         }else {
             holder.imageView.setImageResource(R.drawable.other);
@@ -78,15 +78,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             public void onClick(View v) {
                 ProductsFragment productsFragment = new ProductsFragment();
                 Bundle b = new Bundle();
-                if (categoryModel.getName().equals("Chips") ){
-                    b.putString(Constants.CATEGORY_KEY,categoryModel.getName()+" ");
+                if (categoryModel.getName().equals("شيبس") ){
+                    b.putString(Constants.CATEGORY_KEY,categoryModel.getDescription()+" ");
                 }else if (categoryModel.getName().equals("Personal hygiene")){
                     b.putString(Constants.CATEGORY_KEY,"Personal hygiene (shampoo,deodorant..)");
 
                 }
 
                 else{
-                    b.putString(Constants.CATEGORY_KEY,categoryModel.getName());
+                    b.putString(Constants.CATEGORY_KEY,categoryModel.getDescription());
                 }
                 productsFragment.setArguments(b);
                 AppCompatActivity appCompatActivity =(AppCompatActivity)v.getContext();

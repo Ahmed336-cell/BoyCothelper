@@ -38,6 +38,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    public void settings(View view) {
+        Intent intent = new Intent(HomeActivity.this,SettingsActivity.class);
+        startActivity(intent);
 
-
+    }
 }

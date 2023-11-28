@@ -2,7 +2,23 @@ package com.elm.boycothelper.model;
 
 public class CategoryModel {
    private String name;
+   private String description;
     private int image;
+
+
+    public CategoryModel(String name, String description, int image) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public CategoryModel(String name, int image) {
         this.name = name;

@@ -19,10 +19,17 @@
     <string name="storageper">storage permission is required</string>
     <string name="cameraper">camera and storage permission is required</string>
     <string name="cancelled">Cancelled</string>
-<string name="faildscann">Failed To Scanning </string>
+    <string name="faildscann">Failed To Scanning </string>
     <string name="pickImage">Pick Image First ..</string>
     <string name="correctbar">Choose image with Barcode or Qr code</string>
     <string name="permession">this app need permission to get full and better experience with app and to check product code</string>
     <string name="permissionrequest">Permission Request</string>
     <string name="undifind">Undefined</string>
+    <string name="tryscan">Scan another product</string>
+    <string name="finish">Finish</string>
+    <string name="nofounded">Cancelled</string>
+    <string name="scanningcode">Scanning Barcode</string>
+    <string name="select_language">Select Language</string>
+    <string name="apply_changes">Apply Changes</string>
+
 </resources>

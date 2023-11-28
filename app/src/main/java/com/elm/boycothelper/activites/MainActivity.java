@@ -30,7 +30,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -40,6 +39,7 @@ import android.widget.Toast;
 import com.elm.boycothelper.R;
 import com.elm.boycothelper.model.ProductsJson1;
 import com.elm.boycothelper.model.ProductJson2;
+import com.elm.boycothelper.pojo.Captuer;
 import com.elm.boycothelper.pojo.Constants;
 import com.elm.boycothelper.retrofit.UPCService2;
 import com.elm.boycothelper.retrofit.UPCService1;
@@ -57,6 +57,8 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,13 +92,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        camera = findViewById(R.id.camerabtn);
+        //camera = findViewById(R.id.camerabtn);
         scan = findViewById(R.id.scanbtn);
         barcodeImg = findViewById(R.id.imageVU);
         progressBar = findViewById(R.id.progressBarbarcode);
         companies = new ArrayList<>();
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Constants.DATABASE_REFRENCE);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Constants.DATABASE_REFRENCE_COMPANIES);
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -136,26 +138,22 @@ public class MainActivity extends AppCompatActivity {
         barcodeScanner = BarcodeScanning.getClient(barcodeScannerOptions);
 
 
-        camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkCameraPermession()){
-                    pickIMageCamera();
-                }else{
-                    requestCameraPermession();
-                }
-            }
-        });
+//        camera.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (checkCameraPermession()){
+//                    pickIMageCamera();
+//                }else{
+//                    requestCameraPermession();
+//                }
+//            }
+//        });
 
 
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imageUri == null){
-                    Toast.makeText(MainActivity.this, getString(R.string.pickImage), Toast.LENGTH_SHORT).show();
-                }else{
-                    detectResult();
-                }
+               detectResult();
 
             }
         });
@@ -182,25 +180,90 @@ public class MainActivity extends AppCompatActivity {
 
     private void detectResult() {
         try {
-            InputImage inputImage = InputImage.fromFilePath(this,imageUri);
-            Task<List<Barcode>>barcodeResults = barcodeScanner.process(inputImage)
-                    .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                        @Override
-                        public void onSuccess(List<Barcode> barcodes) {
-                            exteactBarCodeData(barcodes);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(MainActivity.this, getString(R.string.faildscann), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            IntentIntegrator integrator = new IntentIntegrator(this);
+            integrator.setCaptureActivity(Captuer.class);
+            integrator.setOrientationLocked(false);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+            integrator.setPrompt("scanning code");
+            integrator.initiateScan();
         }catch (Exception e){
 
             Toast.makeText(MainActivity.this, getString(R.string.faildscann), Toast.LENGTH_SHORT).show();
 
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult result  = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if (result != null){
+            if (result.getContents() != null){
+                progressBar.setVisibility(View.VISIBLE);// Show ProgressBar
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(Constants.UPC_API_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                String apiKay = Constants.API_KEY_UPC;
+                UPCService1 UPCService1 = retrofit.create(UPCService1.class);
+                Call<ProductsJson1> call = UPCService1.getProductData(result.getContents(), apiKay);
+                call.enqueue(new Callback<ProductsJson1>() {
+                    @Override
+                    public void onResponse(Call<ProductsJson1> call, Response<ProductsJson1> response) {
+                        progressBar.setVisibility(View.GONE); // Show ProgressBar
+                        if (response.isSuccessful()) {
+                            ProductsJson1 productsJson1Response = response.body();
+                            if (productsJson1Response != null) {
+                                String name = productsJson1Response.getTitle();
+                                String coun = productsJson1Response.getBrand();
+                                String description = productsJson1Response.getDescription();
+
+
+                                boolean isBoycott = false;
+                                if (coun ==null && description == null && name == null){
+                                    showBarcodeDataDialog(getString(R.string.undifind),getString(R.string.undifind),true);
+                                }else {
+                                    for (int i = 0; i < companies.size(); i++) {
+                                        if (coun.toLowerCase().contains(companies.get(i).toLowerCase()) ||
+                                                name.toLowerCase().contains(companies.get(i).toLowerCase()) ||
+                                                description.toLowerCase().contains(companies.get(i).toLowerCase())) {
+                                            isBoycott = true;
+                                            break;
+                                        }
+                                    }
+                                    showBarcodeDataDialog(name,coun,isBoycott);
+
+                                }
+
+
+                            } else {
+                                // Handle the case where no data is found
+                                // callSecondAPI(upcCode);
+                                displayNoDataFoundMessage();
+
+                            }
+                        } else {
+                            // callSecondAPI(upcCode);
+                            displayNoDataFoundMessage();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProductsJson1> call, Throwable t) {
+                        progressBar.setVisibility(View.GONE); // Show ProgressBar
+
+                        Toast.makeText(MainActivity.this, getString(R.string.check_connection) , Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                Toast.makeText(this, getString(R.string.nodata), Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            super.onActivityResult(requestCode,resultCode,data);
+        }
+    }
+
+
 
     private void exteactBarCodeData(List<Barcode> barcodes) {
         progressBar.setVisibility(View.VISIBLE);// Show ProgressBar
@@ -498,11 +561,16 @@ public class MainActivity extends AppCompatActivity {
         // Create the AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.tryscan), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Handle OK button click if needed
-                dialog.dismiss();
+                detectResult();
+            }
+        }).setNegativeButton(getString(R.string.finish), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+               finish();
             }
         });
 

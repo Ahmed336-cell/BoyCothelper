@@ -26,6 +26,8 @@ import com.elm.boycothelper.retrofit.ProductsService;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -123,9 +125,14 @@ public class ProductsFragment extends Fragment {
     }
 
     private ProductsService createProductsService() {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cache(new Cache(getContext().getCacheDir(), 100 * 1024 * 1024)) // 10 MB cache size
+                .build();
+
         return new Retrofit.Builder()
                 .baseUrl(Constants.PRODUCT_API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
                 .build()
                 .create(ProductsService.class);
     }
